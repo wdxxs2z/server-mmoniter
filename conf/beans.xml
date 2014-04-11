@@ -16,7 +16,7 @@
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
-			<value>jdbc:mysql://10.232.98.160/ibank_mmonit?useUnicode=true&amp;characterEncoding=utf8</value>
+			<value>jdbc:mysql://10.232.98.160/mmonit?useUnicode=true&amp;characterEncoding=utf8</value>
 		</property>
 		<property name="username">
 			<value>root</value>
@@ -42,49 +42,49 @@
     </bean>
 
 	<!-- DAO层配置 注入jdbcTemplate -->
-	<bean id="monitDAO" class="com.abchina.DaoImpl.MonitDaoImpl">
+	<bean id="monitDAO" class="com.mmonit.DaoImpl.MonitDaoImpl">
 		<property name="jt">
           <ref bean="jdbcTemplate" />
        </property>
 	</bean>
 	
-	<bean id="processDAO" class="com.abchina.DaoImpl.ProcessDaoImpl">
+	<bean id="processDAO" class="com.mmonit.DaoImpl.ProcessDaoImpl">
 		<property name="jt">
 			<ref bean="jdbcTemplate" />
 		</property>
 	</bean>
 	
-	<bean id="remoteHostDAO" class="com.abchina.DaoImpl.RemoteHostDaoImpl">
+	<bean id="remoteHostDAO" class="com.mmonit.DaoImpl.RemoteHostDaoImpl">
 		<property name="jt">
 			<ref bean="jdbcTemplate" />
 		</property>
 	</bean>
 	
-	<bean id="remotePortDAO" class="com.abchina.DaoImpl.RemotePortDaoImpl">
+	<bean id="remotePortDAO" class="com.mmonit.DaoImpl.RemotePortDaoImpl">
 		<property name="jt">
 			<ref bean="jdbcTemplate"/>
 		</property>
 	</bean>
 	
-	<bean id="systemDAO" class="com.abchina.DaoImpl.SystemDaoImpl">
+	<bean id="systemDAO" class="com.mmonit.DaoImpl.SystemDaoImpl">
 		<property name="jt">
 			<ref bean="jdbcTemplate" />
 		</property>
 	</bean>
 	
-	<bean id="monitSerBusDAO" class="com.abchina.DaoImpl.MonitSerBusDaoImpl">
+	<bean id="monitSerBusDAO" class="com.mmonit.DaoImpl.MonitSerBusDaoImpl">
 		<property name="jt">
 			<ref bean="jdbcTemplate" />
 		</property>
 	</bean>
 	
-	<bean id="monitEventDAO" class="com.abchina.DaoImpl.MonitEventDaoImpl">
+	<bean id="monitEventDAO" class="com.mmonit.DaoImpl.MonitEventDaoImpl">
 		<property name="jt">
 			<ref bean="jdbcTemplate" />
 		</property>
 	</bean>
 	
-	<bean id="fileDAO" class="com.abchina.DaoImpl.FileDaoImpl">
+	<bean id="fileDAO" class="com.mmonit.DaoImpl.FileDaoImpl">
 		<property name="jt">
 			<ref bean="jdbcTemplate" />
 		</property>
@@ -92,49 +92,49 @@
 	
 		
 	<!-- 将DAO层注入到Operator层 也就是服务层 -->
-    <bean name="monitOperator" class="com.abchina.operatorImpl.MonitOperatorImpl" >
+    <bean name="monitOperator" class="com.mmonit.operatorImpl.MonitOperatorImpl" >
             <property name="monitDao">
                     <ref bean="monitDAO" />
             </property>
     </bean>
     
-    <bean name="processOperator" class="com.abchina.operatorImpl.ProcessOperatorImpl" >
+    <bean name="processOperator" class="com.mmonit.operatorImpl.ProcessOperatorImpl" >
             <property name="processDao">
                     <ref bean="processDAO" />
             </property>
     </bean>
     
-    <bean name="remoteHostOperator" class="com.abchina.operatorImpl.RemoteHostOperatorImpl" >
+    <bean name="remoteHostOperator" class="com.mmonit.operatorImpl.RemoteHostOperatorImpl" >
             <property name="remoteHostDao">
                     <ref bean="remoteHostDAO" />
             </property>
     </bean> 
     
-    <bean name="remotePortOperator" class="com.abchina.operatorImpl.RemotePortOperatorImpl">
+    <bean name="remotePortOperator" class="com.mmonit.operatorImpl.RemotePortOperatorImpl">
     		<property name="remotePortDao">
     			<ref bean="remotePortDAO"/>
     		</property>
     </bean>
     
-    <bean name="systemOperator" class="com.abchina.operatorImpl.SystemOperatorImpl" >
+    <bean name="systemOperator" class="com.mmonit.operatorImpl.SystemOperatorImpl" >
             <property name="systemDao">
                     <ref bean="systemDAO" />
             </property>
     </bean> 
     
-    <bean name="monitSerBusOperator" class="com.abchina.operatorImpl.MonitSerBusOperatorImpl">
+    <bean name="monitSerBusOperator" class="com.mmonit.operatorImpl.MonitSerBusOperatorImpl">
     		<property name="monitSerBusDao">
     				<ref bean="monitSerBusDAO" />
     		</property>
     </bean>
     
-    <bean name="monitEventOperator" class="com.abchina.operatorImpl.MonitEventOperatorImpl" >
+    <bean name="monitEventOperator" class="com.mmonit.operatorImpl.MonitEventOperatorImpl" >
             <property name="monitEventDao">
                     <ref bean="monitEventDAO" />
             </property>
     </bean> 
     
-    <bean name="fileOperator" class="com.abchina.operatorImpl.FileOperatorImpl">
+    <bean name="fileOperator" class="com.mmonit.operatorImpl.FileOperatorImpl">
     		<property name="fileDao">
     				<ref bean="fileDAO" />
     		</property>
@@ -143,7 +143,7 @@
     <!-- job -->   
     
 	<!-- 要调用的工作类 -->
-	<bean id="systemJobTask" class="com.abchina.jobTask.SystemJobTask">
+	<bean id="systemJobTask" class="com.mmonit.jobTask.SystemJobTask">
 		<property name="jt">
           <ref bean="jdbcTemplate" />
        </property>

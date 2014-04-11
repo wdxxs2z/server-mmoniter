@@ -16,7 +16,7 @@
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
-			<value>jdbc:mysql://127.0.0.1/ibank_mmonit?useUnicode=true&amp;characterEncoding=utf8</value>
+			<value>jdbc:mysql://10.232.98.160/ibank_mmonit?useUnicode=true&amp;characterEncoding=utf8</value>
 		</property>
 		<property name="username">
 			<value>root</value>
@@ -84,6 +84,12 @@
 		</property>
 	</bean>
 	
+	<bean id="fileDAO" class="com.abchina.DaoImpl.FileDaoImpl">
+		<property name="jt">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+	
 		
 	<!-- 将DAO层注入到Operator层 也就是服务层 -->
     <bean name="monitOperator" class="com.abchina.operatorImpl.MonitOperatorImpl" >
@@ -126,7 +132,13 @@
             <property name="monitEventDao">
                     <ref bean="monitEventDAO" />
             </property>
-    </bean>
+    </bean> 
+    
+    <bean name="fileOperator" class="com.abchina.operatorImpl.FileOperatorImpl">
+    		<property name="fileDao">
+    				<ref bean="fileDAO" />
+    		</property>
+    </bean> 
     
     <!-- job -->   
     
@@ -138,17 +150,6 @@
 	</bean>
 	
 	<!-- 定义调用对象和调用方法 -->
-	<bean id="jobtask_1min" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-		<!-- 调用的目标类 -->
-		<property name="targetObject">	
-				<ref bean="systemJobTask"/>
-		</property>
-		
-		<!-- 调用的目标方法 -->
-		<property name="targetMethod">
-				<value>_1minSystemJob</value>		
-		</property>
-	</bean>
 	
 	<bean id="jobtask_15min" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 		<!-- 调用的目标类 -->
@@ -186,21 +187,11 @@
 		</property>
 	</bean>
 	
-	<!-- 定义定时器 1min 15min 1hour 1day-->
-	<bean id="jobTrigger_1min_sys" class="org.springframework.scheduling.quartz.CronTriggerBean">
-		<property name="jobDetail">
-			<ref bean="jobtask_1min"/>
-		</property>
-		
-		<!-- cron 表达式 -->
-		<property name="cronExpression">
-			<value>0 1/1 * * * ?</value>
-		</property>
-	</bean>
+	<!-- 定义定时器 15min 1hour 1day-->
 	
 	<bean id="jobTrigger_15min_sys" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail">
-			<ref bean="jobtask_1min"/>
+			<ref bean="jobtask_15min"/>
 		</property>
 		
 		<!-- cron 表达式 -->
@@ -211,7 +202,7 @@
 	
 	<bean id="jobTrigger_1hour_sys" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail">
-			<ref bean="jobtask_1min"/>
+			<ref bean="jobtask_1hour"/>
 		</property>
 		
 		<!-- cron 表达式 -->
@@ -234,24 +225,19 @@
 	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
 	<bean id="startQuertz" lazy-init="false" autowire="no"
 		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="skipUpdateCheck" value="true" />
 		<property name="quartzProperties">
    			<props>
-    			<prop key="org.quartz.threadPool.threadCount">7</prop>
-    			<prop key="org.quartz.jobStore.driverDelegateClass">
-     				org.quartz.impl.jdbcjobstore.oracle.weblogic.RideOracleDelegate
-    			</prop>
-    			<prop key="org.quartz.jobStore.tablePrefix">BRK_</prop>
+   				<prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
+    			<prop key="org.quartz.threadPool.threadCount">8</prop>
    			</props>
   		</property>
 		<property name="triggers">
 			<list>
-				<ref bean="jobTrigger_1min_sys" />
 				<ref bean="jobTrigger_15min_sys" />
 				<ref bean="jobTrigger_1hour_sys" />
 				<ref bean="jobTrigger_1day_sys" />
 			</list>
 		</property>
-	</bean>
-	
+	</bean> 
+
 </beans>

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<!-- DB -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://127.0.0.1/ibank_mmonit?useUnicode=true&amp;characterEncoding=utf8</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>changeme</value>
+		</property>
+		<!-- 连接池启动时的初始值 -->
+	 	<property name="initialSize" value="1"/>
+	 	<!-- 连接池的最大值 -->
+	 	<property name="maxActive" value="500"/>
+	 	<!-- 最大空闲值.当经过一个高峰时间后，连接池可以慢慢将已经用不到的连接慢慢释放一部分，一直减少到maxIdle为止 -->
+	 	<property name="maxIdle" value="2"/>
+	 	<!--  最小空闲值.当空闲的连接数少于该值时，连接池就会预申请一些连接，以避免洪峰来时再申请而造成的性能开销 -->
+	 	<property name="minIdle" value="1"/>		
+	</bean>
+	
+	<bean id="jdbcTemplate"
+        class="org.springframework.jdbc.core.JdbcTemplate" abstract="false" lazy-init="false" >
+        <property name="dataSource">
+            <ref bean="dataSource" />
+        </property>
+    </bean>
+
+	<!-- DAO层配置 注入jdbcTemplate -->
+	<bean id="monitDAO" class="com.abchina.DaoImpl.MonitDaoImpl">
+		<property name="jt">
+          <ref bean="jdbcTemplate" />
+       </property>
+	</bean>
+	
+	<bean id="processDAO" class="com.abchina.DaoImpl.ProcessDaoImpl">
+		<property name="jt">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+	
+	<bean id="remoteHostDAO" class="com.abchina.DaoImpl.RemoteHostDaoImpl">
+		<property name="jt">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+	
+	<bean id="remotePortDAO" class="com.abchina.DaoImpl.RemotePortDaoImpl">
+		<property name="jt">
+			<ref bean="jdbcTemplate"/>
+		</property>
+	</bean>
+	
+	<bean id="systemDAO" class="com.abchina.DaoImpl.SystemDaoImpl">
+		<property name="jt">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+	
+	<bean id="monitSerBusDAO" class="com.abchina.DaoImpl.MonitSerBusDaoImpl">
+		<property name="jt">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+	
+	<bean id="monitEventDAO" class="com.abchina.DaoImpl.MonitEventDaoImpl">
+		<property name="jt">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+	
+		
+	<!-- 将DAO层注入到Operator层 也就是服务层 -->
+    <bean name="monitOperator" class="com.abchina.operatorImpl.MonitOperatorImpl" >
+            <property name="monitDao">
+                    <ref bean="monitDAO" />
+            </property>
+    </bean>
+    
+    <bean name="processOperator" class="com.abchina.operatorImpl.ProcessOperatorImpl" >
+            <property name="processDao">
+                    <ref bean="processDAO" />
+            </property>
+    </bean>
+    
+    <bean name="remoteHostOperator" class="com.abchina.operatorImpl.RemoteHostOperatorImpl" >
+            <property name="remoteHostDao">
+                    <ref bean="remoteHostDAO" />
+            </property>
+    </bean> 
+    
+    <bean name="remotePortOperator" class="com.abchina.operatorImpl.RemotePortOperatorImpl">
+    		<property name="remotePortDao">
+    			<ref bean="remotePortDAO"/>
+    		</property>
+    </bean>
+    
+    <bean name="systemOperator" class="com.abchina.operatorImpl.SystemOperatorImpl" >
+            <property name="systemDao">
+                    <ref bean="systemDAO" />
+            </property>
+    </bean> 
+    
+    <bean name="monitSerBusOperator" class="com.abchina.operatorImpl.MonitSerBusOperatorImpl">
+    		<property name="monitSerBusDao">
+    				<ref bean="monitSerBusDAO" />
+    		</property>
+    </bean>
+    
+    <bean name="monitEventOperator" class="com.abchina.operatorImpl.MonitEventOperatorImpl" >
+            <property name="monitEventDao">
+                    <ref bean="monitEventDAO" />
+            </property>
+    </bean>
+    
+    <!-- job -->   
+    
+	<!-- 要调用的工作类 -->
+	<bean id="systemJobTask" class="com.abchina.jobTask.SystemJobTask">
+		<property name="jt">
+          <ref bean="jdbcTemplate" />
+       </property>
+	</bean>
+	
+	<!-- 定义调用对象和调用方法 -->
+	<bean id="jobtask_1min" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的目标类 -->
+		<property name="targetObject">	
+				<ref bean="systemJobTask"/>
+		</property>
+		
+		<!-- 调用的目标方法 -->
+		<property name="targetMethod">
+				<value>_1minSystemJob</value>		
+		</property>
+	</bean>
+	
+	<bean id="jobtask_15min" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的目标类 -->
+		<property name="targetObject">	
+				<ref bean="systemJobTask"/>
+		</property>
+		
+		<!-- 调用的目标方法 -->
+		<property name="targetMethod">
+				<value>_15minSystemJob</value>		
+		</property>
+	</bean>
+	
+	<bean id="jobtask_1hour" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的目标类 -->
+		<property name="targetObject">	
+				<ref bean="systemJobTask"/>
+		</property>
+		
+		<!-- 调用的目标方法 -->
+		<property name="targetMethod">
+				<value>_1hourSystemJob</value>		
+		</property>
+	</bean>
+	
+	<bean id="jobtask_1day" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的目标类 -->
+		<property name="targetObject">	
+				<ref bean="systemJobTask"/>
+		</property>
+		
+		<!-- 调用的目标方法 -->
+		<property name="targetMethod">
+				<value>_1daySystemJob</value>		
+		</property>
+	</bean>
+	
+	<!-- 定义定时器 1min 15min 1hour 1day-->
+	<bean id="jobTrigger_1min_sys" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="jobtask_1min"/>
+		</property>
+		
+		<!-- cron 表达式 -->
+		<property name="cronExpression">
+			<value>0 1/1 * * * ?</value>
+		</property>
+	</bean>
+	
+	<bean id="jobTrigger_15min_sys" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="jobtask_1min"/>
+		</property>
+		
+		<!-- cron 表达式 -->
+		<property name="cronExpression">
+			<value>0 15/15 * * * ?</value>
+		</property>
+	</bean>
+	
+	<bean id="jobTrigger_1hour_sys" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="jobtask_1min"/>
+		</property>
+		
+		<!-- cron 表达式 -->
+		<property name="cronExpression">
+			<value>0 0 1/1 * * ?</value>
+		</property>
+	</bean>
+	
+	<bean id="jobTrigger_1day_sys" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="jobtask_1day"/>
+		</property>
+		
+		<!-- cron 表达式 -->
+		<property name="cronExpression">
+			<value>0 0 0 1/1 * ?</value>
+		</property>
+	</bean>
+
+	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
+	<bean id="startQuertz" lazy-init="false" autowire="no"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="skipUpdateCheck" value="true" />
+		<property name="quartzProperties">
+   			<props>
+    			<prop key="org.quartz.threadPool.threadCount">7</prop>
+    			<prop key="org.quartz.jobStore.driverDelegateClass">
+     				org.quartz.impl.jdbcjobstore.oracle.weblogic.RideOracleDelegate
+    			</prop>
+    			<prop key="org.quartz.jobStore.tablePrefix">BRK_</prop>
+   			</props>
+  		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="jobTrigger_1min_sys" />
+				<ref bean="jobTrigger_15min_sys" />
+				<ref bean="jobTrigger_1hour_sys" />
+				<ref bean="jobTrigger_1day_sys" />
+			</list>
+		</property>
+	</bean>
+	
+</beans>

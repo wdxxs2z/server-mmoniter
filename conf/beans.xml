@@ -40,6 +40,38 @@
             <ref bean="dataSource" />
         </property>
     </bean>
+    
+    <!-- 配置事务管理 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
+		<property name="dataSource">
+			<ref local="dataSource"/>
+		</property>
+	</bean>
+	
+	<bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="transactionManager"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<value>*Operator</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+		<property name="transactionInterceptor" ref="transactionInterceptor"></property>
+	</bean>
 
 	<!-- DAO层配置 注入jdbcTemplate -->
 	<bean id="monitDAO" class="com.mmonit.DaoImpl.MonitDaoImpl">
@@ -90,7 +122,6 @@
 		</property>
 	</bean>
 	
-		
 	<!-- 将DAO层注入到Operator层 也就是服务层 -->
     <bean name="monitOperator" class="com.mmonit.operatorImpl.MonitOperatorImpl" >
             <property name="monitDao">

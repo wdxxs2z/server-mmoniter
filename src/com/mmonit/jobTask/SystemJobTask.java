@@ -7,6 +7,36 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class SystemJobTask {
 
 	private JdbcTemplate jt;
+	
+	private final static String TABLE_PORCESS = "process";
+	
+	private final static String TABLE_REMOTEHOST = "remotehost";
+	
+	private final static String TABLE_REMOTEHOSTPORT  = "remotehostport";
+	
+	private final static String TABLE_SYSTEM = "system";
+	
+	private final static String TABLE_MONITFILE = "monitfile";
+	
+	private final static String TABLE_STATISTIC_CPU_USAGE = "statistic_cpu_usage";
+	
+	private final static String TABLE_STATISTIC_MEM_USAGE = "statistic_mem_usage";
+	
+	private final static String TABLE_STATISTIC_LOAD_AVERAGE = "statistic_load_average";
+	
+	private final static String TABLE_STATISTIC_PROCESS_CPU_USAGE = "statistic_process_cpu_usage";
+	
+	private final static String TABLE_STATISTIC_PROCESS_MEM_USAGE = "statistic_process_mem_usage";
+	
+	private final static String TABLE_STATISTIC_CPU_15M = "statistic_cpu_15m";
+	
+	private final static String TABLE_STATISTIC_LOAD_15M = "statistic_load_15m";
+	
+	private final static String TABLE_STATISTIC_MEM_15M = "statistic_mem_15m";
+	
+	private final static String TABLE_STATISTIC_PROCESS_CPU_15M = "statistic_process_cpu_15m";
+	
+	private final static String TABLE_STATISTIC_PROCESS_MEM_15M = "statistic_process_mem_15m";
 
 	public JdbcTemplate getJt() {
 		return jt;
@@ -190,5 +220,40 @@ public class SystemJobTask {
 				jt.execute("call process1dayJob('" + monitid + "','" + pname + "')");
 			}
 		}
+	}
+	
+	/*
+	 * 定期清理表
+	 *
+	 * */
+	public void _2dayDeleteNotStaticData(){
+		String deleteMFile = "delete from " + TABLE_MONITFILE;
+		String deleteMSystem = "delete from " + TABLE_SYSTEM;
+		String deleteMRPort = "delete from " + TABLE_REMOTEHOSTPORT;
+		String deleteMRemote = "delete from " + TABLE_REMOTEHOST;
+		String deleteMProcess = "delete from " + TABLE_PORCESS;
+		String[] deleteBatch = {deleteMFile,deleteMSystem,deleteMRPort,deleteMRemote,deleteMProcess};
+		jt.batchUpdate(deleteBatch);
+		
+	}
+	
+	public void _4dayDeleteStatic15MData(){
+		String deleteCpu15Sql = "delete from " + TABLE_STATISTIC_CPU_15M;
+		String deleteMem15Sql = "delete from " + TABLE_STATISTIC_MEM_15M;
+		String deleteLoad15Sql = "delete from " + TABLE_STATISTIC_LOAD_15M;
+		String deletePCpu15Sql = "delete from " + TABLE_STATISTIC_PROCESS_CPU_15M;
+		String deletePMem15Sql = "delete from " + TABLE_STATISTIC_PROCESS_MEM_15M;
+		String[] deleteBatch = {deleteCpu15Sql,deleteMem15Sql,deleteLoad15Sql,deletePCpu15Sql,deletePMem15Sql};
+		jt.batchUpdate(deleteBatch);
+	}
+	
+	public void _7dayDeleteStaticNot15MData(){
+		String deleteCpuSql = "delete from " + TABLE_STATISTIC_CPU_USAGE;
+		String deleteMenSql = "delete from " + TABLE_STATISTIC_MEM_USAGE;
+		String deleteLoadSql = "delete from " + TABLE_STATISTIC_LOAD_AVERAGE;
+		String deletePCpu = "delete from " + TABLE_STATISTIC_PROCESS_CPU_USAGE;
+		String deletePMem = "delete from " + TABLE_STATISTIC_PROCESS_MEM_USAGE;
+		String[] deleteBatch = {deleteCpuSql,deleteMenSql,deleteLoadSql,deletePCpu,deletePMem};
+		jt.batchUpdate(deleteBatch);
 	}
 }

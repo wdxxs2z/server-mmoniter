@@ -20,7 +20,11 @@ public class RemoteHostOperatorImpl implements RemoteHostOperator {
 
 	@Override
 	public void saveRemoteHost(RemoteHostBean remoteHostBean, String monitId) {
-		remoteHostDao.saveRemoteHost(remoteHostBean,monitId);
+		if(remoteHostBean.getMonitId() == null){
+			
+		}else{
+			remoteHostDao.saveRemoteHost(remoteHostBean,monitId);
+		}
 		
 	}
 

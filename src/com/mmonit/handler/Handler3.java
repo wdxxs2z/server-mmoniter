@@ -39,10 +39,8 @@ public class Handler3 implements Runnable{
 				socket = new Socket(remoteHost, 2812);
 			
 			} catch (Exception e) {
-				/*如果不能连接 则踢掉map中的mid  设置数据库 主机dead  1 标记*/
-				monitOperator.updateMonitStatus(mId,monitStatus);
+				/*如果不能连接 则踢掉map中的mid 不立即从设置数据库 而是通过定时任务扫描数据库中的monit表*/
 				concurrentHashMap.remove(mId);
-				System.out.println("成功删除");
 			} finally{
 				try {
 					socket.close();

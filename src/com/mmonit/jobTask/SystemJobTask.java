@@ -1,6 +1,11 @@
 package com.mmonit.jobTask;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -219,6 +224,54 @@ public class SystemJobTask {
 			for(String pname : processes){
 				jt.execute("call process1dayJob('" + monitid + "','" + pname + "')");
 			}
+		}
+	}
+	
+	/*
+	 * 90秒 需要检测数据库中的monit表对应的主机状态
+	 * 这种情况需要检测 再之前表中记录
+	 * */
+	public void _90secDetectHost() {
+		String detectSql = "select monitHostIp,monitHostPort,monitId from monit";
+		List<Map<String, Object>> detectList = jt.queryForList(detectSql);
+		for(Map<String, Object> checkHostMap :detectList){
+			Iterator<Entry<String, Object>> hostIte = checkHostMap.entrySet().iterator();
+			String hostIp = "";
+			String hostPort = null;
+			String monitId = "";
+			Socket socket = null;
+			while(hostIte.hasNext()){
+				
+				Entry<String, Object> hostEn = hostIte.next();
+				if(hostEn.getKey().equals("monitHostIp")){
+					hostIp = (String) hostEn.getValue();
+				}
+				if(hostEn.getKey().equals("monitHostPort")){
+					hostPort = (String) hostEn.getValue();
+				}
+				if(hostEn.getKey().equals("monitId")){
+					monitId = (String) hostEn.getValue();
+				}
+				
+			}
+			
+			try {
+				socket = new Socket(hostIp, Integer.parseInt(hostPort));
+			
+			} catch (Exception e) {
+				String updateHostStatusSql = "update monit set monitHostStatus=? where monitId=?";
+				jt.update(updateHostStatusSql, 1, monitId);				
+			} finally{
+				try {
+					if(socket == null){
+						continue;
+					}
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
 		}
 	}
 	

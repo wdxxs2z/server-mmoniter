@@ -22,7 +22,11 @@ public class ProcessOperatorImpl implements ProcessOperator {
 	@Override
 	public void saveProcess(ProcessBean processBean, String monitId) {
 		
-		processDao.saveProcess(processBean,monitId);
+		if(processBean.getMonitId() == null){
+			
+		}else{
+			processDao.saveProcess(processBean,monitId);
+		}
 			
 	} 
 	

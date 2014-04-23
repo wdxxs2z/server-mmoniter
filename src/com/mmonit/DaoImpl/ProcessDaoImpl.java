@@ -27,7 +27,7 @@ public class ProcessDaoImpl implements ProcessDao {
 		jt.update(sql,processBean.getProcessName(),processBean.getProcessStatus(),processBean.getCollected_sec(),processBean.getCollected_usec(),
 				processBean.getProcessPid(),processBean.getProcessUptime(),processBean.getProcessChildren(),
 				processBean.getProcessMemPercenttotal(),processBean.getProcessMemKilobytetotal(),
-				processBean.getProcessCpuPercenttotal(),processBean.getMonitId());
+				processBean.getProcessCpuPercenttotal(),monitId);
 		
 	}
 

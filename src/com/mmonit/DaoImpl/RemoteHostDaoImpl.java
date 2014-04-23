@@ -25,7 +25,7 @@ public class RemoteHostDaoImpl implements RemoteHostDao {
 				+ "remoteHostStatus,monitId) values(?,?,?,?,?)";
 		
 		jt.update(sql, remoteHostBean.getRemoteHostName(),remoteHostBean.getCollected_sec(),remoteHostBean.getCollected_usec(),
-				remoteHostBean.getRemoteHostStatus(),remoteHostBean.getMonitId());
+				remoteHostBean.getRemoteHostStatus(),monitId);
 		
 	}
 

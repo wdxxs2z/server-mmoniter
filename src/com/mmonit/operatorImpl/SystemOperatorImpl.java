@@ -21,7 +21,11 @@ public class SystemOperatorImpl implements SystemOperator {
 
 	@Override
 	public void saveSystem(SystemBean systemBean, String monitId) {
-		systemDao.saveSystem(systemBean,monitId);
+		if(systemBean.getMonitId() == null){
+			
+		}else{
+			systemDao.saveSystem(systemBean,monitId);
+		}
 	}
 
 }

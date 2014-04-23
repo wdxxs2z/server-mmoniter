@@ -18,7 +18,11 @@ public class FileOperatorImpl implements FileOperator {
 
 	@Override
 	public void saveFile(FileBean fileBean, String monitID) {
-		fileDao.saveFile(fileBean,monitID);
+		if(fileBean.getMonitId() == null){
+			
+		}else{
+			fileDao.saveFile(fileBean,monitID);
+		}
 		
 	}
 

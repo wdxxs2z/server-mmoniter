@@ -28,7 +28,7 @@ public class SystemDaoImpl implements SystemDao {
 				systemBean.getLoadAvg01(),systemBean.getLoadAvg05(),systemBean.getLoadAvg15(),systemBean.getSystemUserCpu(),
 				systemBean.getSystemSysCpu(),systemBean.getSystemWaitCpu(),systemBean.getSystemMemperc(),
 				systemBean.getSystemMemTot(),systemBean.getSystemSwapperc(),
-				systemBean.getSystemSwapTot(),systemBean.getMonitId());
+				systemBean.getSystemSwapTot(),monitId);
 	}
 
 }

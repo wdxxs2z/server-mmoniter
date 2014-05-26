@@ -28,9 +28,9 @@ public class ThreadPoolMonit {
 	private ExecutorService executorService = null;
 	/*单CPU对应的线程池大小*/
 	private final int POOL_SIZE = 2;
-	static ConcurrentHashMap<String, String> concurrentHashMap = null;
+	ConcurrentHashMap<String, String> concurrentHashMap = null;
 	/*monit Bean*/
-	private static MonitBean monitBean = null;
+	private MonitBean monitBean = null;
 	 
 	
 	/**

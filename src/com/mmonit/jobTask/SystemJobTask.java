@@ -2,6 +2,8 @@ package com.mmonit.jobTask;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,8 @@ public class SystemJobTask {
 	private final static String TABLE_STATISTIC_PROCESS_CPU_15M = "statistic_process_cpu_15m";
 	
 	private final static String TABLE_STATISTIC_PROCESS_MEM_15M = "statistic_process_mem_15m";
+	
+	private final static long DATH_TIME = 1000 * 60 * 10;//过了10分钟 如果还未发现时间变化 则将状态置为1
 
 	public JdbcTemplate getJt() {
 		return jt;
@@ -232,13 +236,14 @@ public class SystemJobTask {
 	 * 这种情况需要检测 再之前表中记录
 	 * */
 	public void _90secDetectHost() {
-		String detectSql = "select monitHostIp,monitHostPort,monitId from monit";
+		String detectSql = "select inserttime,monitHostIp,monitHostPort,monitId from monit";
 		List<Map<String, Object>> detectList = jt.queryForList(detectSql);
 		for(Map<String, Object> checkHostMap :detectList){
 			Iterator<Entry<String, Object>> hostIte = checkHostMap.entrySet().iterator();
 			String hostIp = "";
 			String hostPort = null;
 			String monitId = "";
+			Timestamp timestamp = null;
 			Socket socket = null;
 			while(hostIte.hasNext()){
 				
@@ -251,12 +256,27 @@ public class SystemJobTask {
 				}
 				if(hostEn.getKey().equals("monitId")){
 					monitId = (String) hostEn.getValue();
+				}if(hostEn.getKey().equals("inserttime")){
+					timestamp = (Timestamp) hostEn.getValue();
+					System.out.println(timestamp);
 				}
 				
 			}
 			
 			try {
+				Date dathtime = new Date(DATH_TIME);			
+				String getNow = "select now()";
+				long nowTime = jt.queryForLong(getNow);
+				
 				socket = new Socket(hostIp, Integer.parseInt(hostPort));
+				if(socket.isConnected()){
+					if((nowTime-timestamp.getTime()) > dathtime.getTime()){
+						String updateHostStatusSql = "update monit set monitHostStatus=? where monitId=?";
+						jt.update(updateHostStatusSql, 1,monitId);
+					}else{
+						return;
+					}
+				}
 			
 			} catch (Exception e) {
 				String updateHostStatusSql = "update monit set monitHostStatus=? where monitId=?";

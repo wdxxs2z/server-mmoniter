@@ -264,19 +264,14 @@ public class SystemJobTask {
 			}
 			
 			try {
-				Date dathtime = new Date(DATH_TIME);			
 				String getNow = "select now()";
-				long nowTime = jt.queryForLong(getNow);
-				
-				socket = new Socket(hostIp, Integer.parseInt(hostPort));
-				if(socket.isConnected()){
-					if((nowTime-timestamp.getTime()) > dathtime.getTime()){
-						String updateHostStatusSql = "update monit set monitHostStatus=? where monitId=?";
-						jt.update(updateHostStatusSql, 1,monitId);
-					}else{
-						return;
-					}
+				Timestamp notime = jt.queryForObject(getNow, Timestamp.class);
+				long nowTime = notime.getTime();
+				if((nowTime-timestamp.getTime()) > DATH_TIME){			
+					String updateHostStatusSql = "update monit set monitHostStatus=? ,inserttime=? where monitId=?";
+					jt.update(updateHostStatusSql, 1,timestamp,monitId);
 				}
+				socket = new Socket(hostIp, Integer.parseInt(hostPort));
 			
 			} catch (Exception e) {
 				String updateHostStatusSql = "update monit set monitHostStatus=? where monitId=?";

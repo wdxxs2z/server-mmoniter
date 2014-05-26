@@ -267,6 +267,9 @@ public class SystemJobTask {
 				String getNow = "select now()";
 				Timestamp notime = jt.queryForObject(getNow, Timestamp.class);
 				long nowTime = notime.getTime();
+				/**
+				 * 和数据库里的时间对比 不做本地取时  避免误差
+				 * */
 				if((nowTime-timestamp.getTime()) > DATH_TIME){			
 					String updateHostStatusSql = "update monit set monitHostStatus=? ,inserttime=? where monitId=?";
 					jt.update(updateHostStatusSql, 1,timestamp,monitId);

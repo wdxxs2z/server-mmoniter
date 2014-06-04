@@ -3,16 +3,15 @@ package com.mmonit.main;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
-import com.mmonit.bean.MonitBean;
 import com.mmonit.handler.Handler;
-import com.mmonit.handler.Handler2;
 import com.mmonit.handler.Handler3;
+import com.mmonit.handler.WorkHandler;
 import com.mmonit.utils.SpringUtil;
 
 public class ThreadPoolMonit {
@@ -27,10 +26,10 @@ public class ThreadPoolMonit {
 	private ServerSocket serverSocket = null;
 	private ExecutorService executorService = null;
 	/*单CPU对应的线程池大小*/
-	private final int POOL_SIZE = 2;
+	private final int POOL_SIZE = 4;
 	ConcurrentHashMap<String, String> concurrentHashMap = null;
-	/*monit Bean*/
-	private MonitBean monitBean = null;
+	/*存储队列，工作线程使用*/
+	Queue<String> storeQueue = null;
 	 
 	
 	/**
@@ -40,9 +39,9 @@ public class ThreadPoolMonit {
 	public ThreadPoolMonit() throws IOException {
 		serverSocket = new ServerSocket(serverPort);
 		concurrentHashMap = new ConcurrentHashMap<String, String>();
-		monitBean = new MonitBean();
-		/*初始化线程*/
+		storeQueue = new LinkedBlockingQueue<String>();
 		
+		/*初始化线程*/
 		executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*POOL_SIZE);
 		System.out.println("Monit Server Start.");
 	}
@@ -55,15 +54,14 @@ public class ThreadPoolMonit {
 		/*启动容器*/
 		SpringUtil.start();
 		
-		System.out.println(SpringUtil.getBean("jdbcTemplate"));
 		while(true){
 			Socket socket = null;
 			try {
 				socket = serverSocket.accept();
 				/*将得到的socket投入线程池中 重新定义concurrentHashMap*/
-				executorService.execute(new Handler(socket,concurrentHashMap));
-				/*根据concurrentHashMap中的对应关系 将MonitBean对象封装 并打印出值*/
-				executorService.execute(new Handler2(concurrentHashMap,monitBean));
+				executorService.execute(new Handler(socket,concurrentHashMap,storeQueue));
+				/*得到消息队列，使用工作线程对其进行数据IO操作，减轻socket的压力*/
+				executorService.execute(new WorkHandler(storeQueue));
 				/*监控concurrentHashMap 发现某台agent连接不上 则从map中删除该节点*/
 				executorService.execute(new Handler3(socket, concurrentHashMap));
 				

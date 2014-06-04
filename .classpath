@@ -1,56 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="conf"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/base64-2.0.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/dom4j-1.6.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/jaxen-1.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/antlr-runtime-3.5.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.aop-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.asm-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.aspects-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.beans-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.context-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.context.support-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.core-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.expression-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.instrument-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.instrument.tomcat-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.jdbc-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.jms-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.orm-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.oxm-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.test-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.transaction-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.web-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.web.portlet-3.0.5.RELEASE.jar"/>
-	<classpathentry exported="true" kind="lib" path="projectLIB/spring/org.springframework.web.servlet-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/mysql-connector-java-5.1.6-bin.jar"/>
-	<classpathentry kind="lib" path="projectLIB/commons-dbcp-1.4.jar"/>
-	<classpathentry kind="lib" path="projectLIB/commons-pool-1.6.jar"/>
-	<classpathentry kind="lib" path="projectLIB/asm-3.3.1.jar"/>
-	<classpathentry kind="lib" path="projectLIB/cglib-2.2.2.jar"/>
-	<classpathentry kind="lib" path="projectLIB/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="projectLIB/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="projectLIB/slf4j-api-1.6.2.jar"/>
-	<classpathentry kind="lib" path="projectLIB/slf4j-log4j12-1.6.2.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/aopalliance-1.0.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/commons-logging-1.1.1.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/jettison-1.1.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/org.springframework.web.struts-3.0.5.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-aop-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-asm-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-batch-core-2.1.8.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-batch-infrastructure-2.1.8.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-beans-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-context-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-core-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-expression-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-jdbc-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/spring-tx-3.1.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/xpp3_min-1.1.4c.jar"/>
-	<classpathentry kind="lib" path="projectLIB/spring/xstream-1.3.jar"/>
-	<classpathentry kind="lib" path="projectLIB/quartz-1.8.4.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry including="**/*.java" kind="src" path="conf"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

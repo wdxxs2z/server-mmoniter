@@ -40,10 +40,26 @@
   </build>
   <dependencies>  	
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
+      	<groupId>junit</groupId>
+      	<artifactId>junit</artifactId>
+      	<version>3.8.1</version>
+      	<scope>test</scope>
+  	</dependency>
+  	<!-- spring activemq2.9.1 -->
+  	<dependency>
+  		<groupId>javax.annotation</groupId>  
+        <artifactId>jsr250-api</artifactId>  
+        <version>1.0</version>	
+  	</dependency>
+  	<dependency>
+  		 <groupId>org.apache.activemq</groupId>
+         <artifactId>activemq-all</artifactId>  
+         <version>5.9.1</version> 
+  	</dependency>
+  	<dependency> 
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-jms</artifactId>
+         <version>${org.springframework-version}</version>
   	</dependency>
   	<dependency>
   		<groupId>org.ow2.util.base64</groupId>
@@ -220,7 +236,5 @@
 			</exclusions>
 			<scope>runtime</scope>
 		</dependency>
-  </dependencies>
-  
- 
+  </dependencies> 
 </project>

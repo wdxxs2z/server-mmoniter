@@ -112,7 +112,7 @@ public class WorkHandler implements Runnable {
 						.getServiceStatusAndMonitor(substring, type, service);
 				
 				/* 将monit事件添加到activeMQ中去 */
-				monitEventMessage.sendMonitEventMessage(substring);
+				monitEventMessage.sendMonitEventMessage(smonitId,substring);
 
 				monitSerBusOperator.updateMonitSerBus(smonitId, service,
 						serStatusAndMonitor[0], serStatusAndMonitor[1], type);

@@ -26,8 +26,8 @@ public class MonitEventMessageImpl implements MonitEventMessage {
 	}
 
 	@Override
-	public void sendMonitEventMessage(String monitxml) {
-		sender.sendMonitEventMessage(monitxml);
+	public void sendMonitEventMessage(String monitId,String monitxml) {
+		sender.sendMonitEventMessage(monitId,monitxml);
 	}
 
 	@Override

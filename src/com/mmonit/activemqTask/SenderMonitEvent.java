@@ -22,15 +22,15 @@ public class SenderMonitEvent {
 		this.jmsTemplate = jmsTemplate;
 	}
 	
-	public void sendMonitEventMessage(final String msgxml){
+	public void sendMonitEventMessage(final String monitId,final String msgxml){
 		final String uuid = UUID.randomUUID().toString();
 		jmsTemplate.send(new MessageCreator() {
 			
 			@Override
 			public Message createMessage(Session session) throws JMSException {
 				TextMessage msg = session.createTextMessage(msgxml);
-				msg.setJMSMessageID("monit_event");
 				msg.setJMSCorrelationID(uuid);
+				msg.setStringProperty("monitId", monitId);
 				return msg;
 			}
 		});

@@ -55,4 +55,9 @@ public class MonitSerBusOperatorImpl implements MonitSerBusOperator {
 		}	
 	}
 
+	@Override
+	public void deleteMonitSerBus() {
+		monitSerBusDao.deleteMonitSerBus();		
+	}
+
 }

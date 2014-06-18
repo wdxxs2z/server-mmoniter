@@ -41,7 +41,29 @@ public class MonitXml2O {
 		return map;
 	}
 	
-	
+	public static String getMonitId(String substring){
+		String monitId = "";
+		Document doc = null;
+		try {
+			doc = DocumentHelper.parseText(substring);			
+			Element rootElt = doc.getRootElement();
+			Iterator<Attribute> attributeIterator = rootElt.attributeIterator();
+			while (attributeIterator.hasNext()) {// 遍历root节点的属性
+				Attribute a = (Attribute) attributeIterator.next();
+				//根据monit id 进程判断 是否是新节点
+				String name = a.getName();
+				String value = a.getValue();
+				if(name.equals("id")){
+					monitId = value;
+				}				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return monitId;
+		
+	}
+		
 	public static String getRemoteHost(String mId, String mInfo) {
 		Document doc = null;
 		String address = "";

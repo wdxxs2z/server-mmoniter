@@ -37,7 +37,6 @@ public class WorkHandler implements Runnable {
 	private MonitEventOperator monitEventOperator;
 	private MonitSerBusOperator monitSerBusOperator;
 	private FileOperator fileOperator;
-	private MonitEventMessage monitEventMessage;
 
 	public WorkHandler(Queue<String> sQueue) {
 		super();
@@ -56,7 +55,6 @@ public class WorkHandler implements Runnable {
 		monitSerBusOperator = (MonitSerBusOperator) SpringUtil
 				.getBean(MonitSerBusOperator.class);
 		fileOperator = (FileOperator) SpringUtil.getBean(FileOperator.class);
-		monitEventMessage = (MonitEventMessage) SpringUtil.getBean(MonitEventMessage.class);
 	}
 
 	@Override
@@ -110,9 +108,6 @@ public class WorkHandler implements Runnable {
 				/* 匹配事件更新 */
 				int[] serStatusAndMonitor = MonitService
 						.getServiceStatusAndMonitor(substring, type, service);
-				
-				/* 将monit事件添加到activeMQ中去 */
-				monitEventMessage.sendMonitEventMessage(smonitId,substring);
 
 				monitSerBusOperator.updateMonitSerBus(smonitId, service,
 						serStatusAndMonitor[0], serStatusAndMonitor[1], type);

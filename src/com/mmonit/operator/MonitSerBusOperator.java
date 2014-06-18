@@ -8,5 +8,7 @@ public interface MonitSerBusOperator {
 
 	void updateMonitSerBus(String smonitId, String service, int serStatus,int serMonitor, int type);
 
+	void deleteMonitSerBus();
+
 	
 }

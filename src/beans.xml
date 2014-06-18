@@ -174,7 +174,7 @@
     
     <!-- activeMQ   采用队列的方式 异步 -->
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616?transport.useAsyncSend=true"></property>
+        <property name="brokerURL" value="failover:(tcp://localhost:61616?jms.useAsyncSend=true)"></property>
     </bean>
     <bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg index="0" value="com.mmonit.activemqTask"></constructor-arg>
@@ -337,7 +337,7 @@
 		
 		<!-- cron 表达式 -->
 		<property name="cronExpression">
-			<value>0 0 0 2/2 * ?</value>
+			<value>0 0 0 1/2 * ?</value>
 		</property>
 	</bean>
 	
@@ -348,7 +348,7 @@
 		
 		<!-- cron 表达式 -->
 		<property name="cronExpression">
-			<value>0 0 0 4/4 * ?</value>
+			<value>0 0 0 1/4 * ?</value>
 		</property>
 	</bean>
 	
@@ -359,7 +359,7 @@
 		
 		<!-- cron 表达式 -->
 		<property name="cronExpression">
-			<value>0 0 0 7/7 * ?</value>
+			<value>0 0 0 1/7 * ?</value>
 		</property>
 	</bean>
 

@@ -11,7 +11,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.mmonit.handler.Handler;
 import com.mmonit.handler.Handler3;
+import com.mmonit.handler.MQWorkerHandler;
 import com.mmonit.handler.WorkHandler;
+import com.mmonit.operator.MonitSerBusOperator;
 import com.mmonit.utils.SpringUtil;
 
 public class ThreadPoolMonit {
@@ -29,7 +31,8 @@ public class ThreadPoolMonit {
 	private final int POOL_SIZE = 4;
 	ConcurrentHashMap<String, String> concurrentHashMap = null;
 	/*存储队列，工作线程使用*/
-	Queue<String> storeQueue = null;
+	Queue<String> normalMQueue = null;
+	Queue<String> eventMQueue = null;
 	 
 	
 	/**
@@ -37,11 +40,11 @@ public class ThreadPoolMonit {
 	 * @throws IOException 
 	 * */
 	public ThreadPoolMonit() throws IOException {
+		/*初始化线程*/
 		serverSocket = new ServerSocket(serverPort);
 		concurrentHashMap = new ConcurrentHashMap<String, String>();
-		storeQueue = new LinkedBlockingQueue<String>();
-		
-		/*初始化线程*/
+		normalMQueue = new LinkedBlockingQueue<String>();//存储需要数据库操作的monit xml
+		eventMQueue = new LinkedBlockingQueue<String>();//存储active处理带事件的queue
 		executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()*POOL_SIZE);
 		System.out.println("Monit Server Start.");
 	}
@@ -53,15 +56,18 @@ public class ThreadPoolMonit {
 	public void service(){
 		/*启动容器*/
 		SpringUtil.start();
-		
+		MonitSerBusOperator monitSerBusOperator=(MonitSerBusOperator) SpringUtil.getBean(MonitSerBusOperator.class);
+		monitSerBusOperator.deleteMonitSerBus();		
 		while(true){
 			Socket socket = null;
 			try {
 				socket = serverSocket.accept();
 				/*将得到的socket投入线程池中 重新定义concurrentHashMap*/
-				executorService.execute(new Handler(socket,concurrentHashMap,storeQueue));
+				executorService.execute(new Handler(socket,concurrentHashMap,normalMQueue,eventMQueue));
 				/*得到消息队列，使用工作线程对其进行数据IO操作，减轻socket的压力*/
-				executorService.execute(new WorkHandler(storeQueue));
+				executorService.execute(new WorkHandler(normalMQueue));
+				/*activeMQ 的处理消息队列*/
+				executorService.execute(new MQWorkerHandler(eventMQueue));
 				/*监控concurrentHashMap 发现某台agent连接不上 则从map中删除该节点*/
 				executorService.execute(new Handler3(socket, concurrentHashMap));
 				

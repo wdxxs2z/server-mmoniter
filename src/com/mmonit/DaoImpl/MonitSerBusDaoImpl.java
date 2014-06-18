@@ -100,5 +100,11 @@ public class MonitSerBusDaoImpl implements MonitSerBusDao{
 		jt.update(sql, serStatus,serMonitor,smonitId,service);
 	}
 
+	@Override
+	public void deleteMonitSerBus() {
+		String deleteServiceTable = "delete from services";
+		jt.update(deleteServiceTable);		
+	}
+
 
 }

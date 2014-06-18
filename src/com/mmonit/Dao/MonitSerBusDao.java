@@ -11,5 +11,7 @@ public interface MonitSerBusDao {
 	Object findMonitSerBusByMIDAndSerName(String monitID, String service_name);
 
 	void updateMonitSerBus(String smonitId, String service, int serStatus, int serMonitor);
+	
+	void deleteMonitSerBus();
 
 }

@@ -16,17 +16,20 @@ public class Handler implements Runnable {
 
 	private Socket socket = null;
 	private ConcurrentHashMap<String, String> concurrentHashMap = new ConcurrentHashMap<String, String>();
-	private Queue<String> storeQueue = new LinkedBlockingQueue<String>();
+	private Queue<String> normalMQueue = new LinkedBlockingQueue<String>();
+	private Queue<String> eventMQueue = new LinkedBlockingQueue<String>();
 
 	/**
 	 * 构造初始化 socket
 	 * @param storeQueue 
 	 * */
 	public Handler(Socket socket,
-			ConcurrentHashMap<String, String> concurrentHashMap, Queue<String> storeQueue) {
+			ConcurrentHashMap<String, String> concurrentHashMap, Queue<String> normalMQueue,
+			Queue<String> eventMQueue) {
 		this.socket = socket;
 		this.concurrentHashMap = concurrentHashMap;
-		this.storeQueue = storeQueue;
+		this.normalMQueue = normalMQueue;
+		this.eventMQueue = eventMQueue;
 	}
 
 	@Override
@@ -42,7 +45,7 @@ public class Handler implements Runnable {
 			}
 			int lastIndexOf = s_totle.lastIndexOf("<?xml");
 			String substring = s_totle.substring(lastIndexOf);
-			storeQueue.add(substring);
+			normalMQueue.add(substring);
 			int judge = substring.lastIndexOf("event");
 			if (judge < 0) {
 				ConcurrentHashMap<String, String> monitIdInfo = MonitXml2O
@@ -51,6 +54,8 @@ public class Handler implements Runnable {
 				Enumeration<String> monitIds = monitIdInfo.keys();
 				String monitId = monitIds.nextElement();
 				concurrentHashMap.put(monitId, substring);
+			}else{
+				eventMQueue.add(substring);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -30,7 +30,8 @@ public class MQWorkerHandler implements Runnable{
 			String substring = eventMQueue.remove();
 			String monitId = MonitXml2O.getMonitId(substring);
 			/* 将monit事件添加到activeMQ中去 */
-			monitEventMessage.sendMonitEventMessage(monitId,substring);
+			//monitEventMessage.sendMonitEventMessage(monitId,substring);
+			monitEventMessage.sendMonitEventMessageByJSON(monitId, substring);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

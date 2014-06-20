@@ -63,6 +63,66 @@ public class MonitXml2O {
 		return monitId;
 		
 	}
+	
+	public static String mqJSONDate(String substring){
+		String eventJSONDate = "";
+		Document doc = null;
+		String monitId = "";
+		StringBuffer stringBuffer = new StringBuffer();
+		try {
+			doc = DocumentHelper.parseText(substring);			
+			Element rootElt = doc.getRootElement();
+			Iterator<Attribute> attributeIterator = rootElt.attributeIterator();
+			while(attributeIterator.hasNext()){
+				Attribute a = (Attribute) attributeIterator.next();
+				//根据monit id 进程判断 是否是新节点
+				String name = a.getName();
+				if(name.equals("id")){
+					monitId = a.getValue();					
+				}
+			}
+			stringBuffer.append("{\"" + monitId + "\":[");
+			
+			Iterator serverIterator = rootElt.elementIterator("server");
+			String localhost = "";
+			String address = "";
+			while(serverIterator.hasNext()){
+				Element serE = (Element) serverIterator.next();
+				localhost = serE.elementTextTrim("localhostname");
+				
+				Iterator httpdIte = serE.elementIterator("httpd");
+				while (httpdIte.hasNext()) {
+					Element httpEle = (Element) httpdIte.next();
+					address = httpEle.elementTextTrim("address");
+				}				
+			}
+			stringBuffer.append("{\"hostname\"" + ":" + "\"" + localhost + "\"},");			
+			stringBuffer.append("{\"ip\"" + ":" + "\"" + address + "\"},");
+			
+			Iterator eventIterator = rootElt.elementIterator("event");
+			String servicename = "";
+			String servicetype = "";
+			String serviceaction = "";
+			String eventmessage = "";
+			while(eventIterator.hasNext()){
+				Element eventEle = (Element)eventIterator.next();
+				servicename = eventEle.elementTextTrim("service");
+				servicetype = eventEle.elementTextTrim("type");
+				serviceaction = eventEle.elementTextTrim("action");
+				eventmessage = eventEle.elementTextTrim("message");
+			}
+			stringBuffer.append("{\"servicename\"" + ":" + "\"" + servicename + "\"},");
+			stringBuffer.append("{\"servicetype\"" + ":" + "\"" + servicetype + "\"},");
+			stringBuffer.append("{\"serviceaction\"" + ":" + "\"" + serviceaction + "\"},");
+			stringBuffer.append("{\"eventmessage\"" + ":" + "\"" + eventmessage + "\"}");
+			stringBuffer.append("]}");
+			eventJSONDate = stringBuffer.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return eventJSONDate;
+	}
 		
 	public static String getRemoteHost(String mId, String mInfo) {
 		Document doc = null;

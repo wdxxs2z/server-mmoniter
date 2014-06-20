@@ -36,6 +36,18 @@ public class SenderMonitEvent {
 		});
 		
 	}
-	
 
+	public void sendMonitEventMessageByJSON(final String monitId, final String mqJSONDate) {
+		final String uuid = UUID.randomUUID().toString();
+		jmsTemplate.send(new MessageCreator() {
+			
+			@Override
+			public Message createMessage(Session session) throws JMSException {
+				TextMessage msg = session.createTextMessage(mqJSONDate);
+				msg.setJMSCorrelationID(uuid);
+				msg.setStringProperty("monitId", monitId);
+				return msg;
+			}
+		});		
+	}
 }

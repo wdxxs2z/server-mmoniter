@@ -7,5 +7,7 @@ public interface MonitEventMessage {
 	public void receiveMonitEventMessage(String monitxml);
 
 	public void sendMonitEventMessageByJSON(String monitId, String substring);
+
+	public String receiveMonitEventMessage();
 	
 }

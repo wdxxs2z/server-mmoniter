@@ -9,8 +9,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.mmonit.handler.Handler;
-import com.mmonit.handler.Handler3;
+import com.mmonit.handler.MainHandler;
+import com.mmonit.handler.DetectMonitMapHandler;
 import com.mmonit.handler.MQWorkerHandler;
 import com.mmonit.handler.WorkHandler;
 import com.mmonit.operator.MonitSerBusOperator;
@@ -63,13 +63,13 @@ public class ThreadPoolMonit {
 			try {
 				socket = serverSocket.accept();
 				/*将得到的socket投入线程池中 重新定义concurrentHashMap*/
-				executorService.execute(new Handler(socket,concurrentHashMap,normalMQueue,eventMQueue));
+				executorService.execute(new MainHandler(socket,concurrentHashMap,normalMQueue,eventMQueue));
 				/*得到消息队列，使用工作线程对其进行数据IO操作，减轻socket的压力*/
 				executorService.execute(new WorkHandler(normalMQueue));
 				/*activeMQ 的处理消息队列*/
 				executorService.execute(new MQWorkerHandler(eventMQueue));
 				/*监控concurrentHashMap 发现某台agent连接不上 则从map中删除该节点*/
-				executorService.execute(new Handler3(socket, concurrentHashMap));
+				executorService.execute(new DetectMonitMapHandler(socket, concurrentHashMap));
 				
 			} catch (Exception e) {
 				e.printStackTrace();

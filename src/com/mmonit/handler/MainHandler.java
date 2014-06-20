@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import com.mmonit.utils.MonitXml2O;
 
-public class Handler implements Runnable {
+public class MainHandler implements Runnable {
 
 	private Socket socket = null;
 	private ConcurrentHashMap<String, String> concurrentHashMap = new ConcurrentHashMap<String, String>();
@@ -23,7 +23,7 @@ public class Handler implements Runnable {
 	 * 构造初始化 socket
 	 * @param storeQueue 
 	 * */
-	public Handler(Socket socket,
+	public MainHandler(Socket socket,
 			ConcurrentHashMap<String, String> concurrentHashMap, Queue<String> normalMQueue,
 			Queue<String> eventMQueue) {
 		this.socket = socket;

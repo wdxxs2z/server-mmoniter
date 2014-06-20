@@ -43,4 +43,10 @@ public class MonitEventMessageImpl implements MonitEventMessage {
 		sender.sendMonitEventMessageByJSON(monitId,mqJSONDate);		
 	}
 
+	@Override
+	public String receiveMonitEventMessage() {
+		String receiveMonitEventMessage = receiver.receiveMonitEventMessage();
+		return receiveMonitEventMessage;		
+	}
+
 }

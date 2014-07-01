@@ -9,7 +9,8 @@
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd" 
+           default-lazy-init="true">
 
 	<!-- DB -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
@@ -36,7 +37,7 @@
 	</bean>
 	
 	<bean id="jdbcTemplate"
-        class="org.springframework.jdbc.core.JdbcTemplate" abstract="false" lazy-init="false" >
+        class="org.springframework.jdbc.core.JdbcTemplate" abstract="false">
         <property name="dataSource">
             <ref bean="dataSource" />
         </property>
@@ -172,9 +173,9 @@
     		</property>
     </bean>
     
-    <!-- activeMQ   采用队列的方式 异步 -->
+    <!-- activeMQ   采用队列的方式 -->
     <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
-        <property name="brokerURL" value="failover://(tcp://localhost:61616,tcp://10.233.83.222:61616,tcp://10.233.83.223:61616)?randomize=false;jms.useAsyncSend=true"></property>
+        <property name="brokerURL" value="tcp://localhost:61616"></property>
     </bean>
     <bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
         <constructor-arg index="0" value="com.mmonit.activemqTask"></constructor-arg>
@@ -337,7 +338,7 @@
 		
 		<!-- cron 表达式 -->
 		<property name="cronExpression">
-			<value>0 0 0 1/2 * ?</value>
+			<value>0 0 0 2/2 * ?</value>
 		</property>
 	</bean>
 	
@@ -348,7 +349,7 @@
 		
 		<!-- cron 表达式 -->
 		<property name="cronExpression">
-			<value>0 0 0 1/4 * ?</value>
+			<value>0 0 0 4/4 * ?</value>
 		</property>
 	</bean>
 	
@@ -359,7 +360,7 @@
 		
 		<!-- cron 表达式 -->
 		<property name="cronExpression">
-			<value>0 0 0 1/7 * ?</value>
+			<value>0 0 0 7/7 * ?</value>
 		</property>
 	</bean>
 

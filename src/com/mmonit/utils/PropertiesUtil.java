@@ -2,6 +2,8 @@ package com.mmonit.utils;
 
 import java.io.InputStream;
 import java.util.Properties;
+
+import com.mmonit.main.ThreadPoolMonit;
 /*
  * 功能：按照properties文件查找属性值
  * author:yuanyuan
@@ -12,7 +14,7 @@ public class PropertiesUtil {
 		InputStream is;
 		String propertieV = null;
 		try {
-			is = ClassLoader.getSystemResourceAsStream(path);
+			is = ThreadPoolMonit.class.getClassLoader().getResourceAsStream(path);
 			Properties p=new Properties();
 			p.load(is);
 			propertieV = p.getProperty(key);
@@ -20,7 +22,7 @@ public class PropertiesUtil {
 		} catch (Exception e) {
 			
 			e.printStackTrace();
-		}
+		}		
 		return propertieV;
 	}
 }

@@ -61,8 +61,14 @@ public class ThreadPoolMonit {
 	 * */
 	public void service() {
 		init();// 初始化 包括spring 数据库等
-		switch (isactivemq.toString()) {
-		case "false":
+		int flag = 0;
+		if(isactivemq.toString().equals("false")){
+			flag = 0;
+		}else{
+			flag = 1;
+		}
+		switch (flag) {
+		case 1 :
 			while (true) {
 				Socket socket = null;
 				try {
@@ -80,7 +86,7 @@ public class ThreadPoolMonit {
 					e.printStackTrace();
 				}
 			}
-		case "true":
+		case 2 :
 			while (true) {
 				Socket socket = null;
 				try {

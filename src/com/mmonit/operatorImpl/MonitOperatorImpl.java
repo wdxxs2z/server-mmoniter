@@ -1,7 +1,6 @@
 package com.mmonit.operatorImpl;
 
 import com.mmonit.Dao.MonitDao;
-import com.mmonit.DaoImpl.MonitDaoImpl;
 import com.mmonit.bean.MonitBean;
 import com.mmonit.operator.MonitOperator;
 

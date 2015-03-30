@@ -68,7 +68,7 @@ public class ThreadPoolMonit {
 			flag = 1;
 		}
 		switch (flag) {
-		case 1 :
+		case 0 :
 			while (true) {
 				Socket socket = null;
 				try {
@@ -86,7 +86,7 @@ public class ThreadPoolMonit {
 					e.printStackTrace();
 				}
 			}
-		case 2 :
+		case 1 :
 			while (true) {
 				Socket socket = null;
 				try {

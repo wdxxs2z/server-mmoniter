@@ -29,6 +29,9 @@ public class MainHandlerNOMQ implements Runnable {
 	@Override
 	public void run() {
 		try {
+			if(normalMQueue.isEmpty()){
+				return;
+			}
 			InputStream inputStream = socket.getInputStream();
 			String s_line = "";
 			String s_totle = "";

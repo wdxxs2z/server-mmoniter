@@ -12,7 +12,6 @@ import com.mmonit.bean.ProcessBean;
 import com.mmonit.bean.RemoteHostBean;
 import com.mmonit.bean.RemotePortBean;
 import com.mmonit.bean.SystemBean;
-import com.mmonit.message.MonitEventMessage;
 import com.mmonit.operator.FileOperator;
 import com.mmonit.operator.MonitEventOperator;
 import com.mmonit.operator.MonitOperator;

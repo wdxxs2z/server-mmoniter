@@ -6,22 +6,20 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.mmonit.operator.MonitOperator;
 import com.mmonit.utils.MonitXml2O;
-import com.mmonit.utils.SpringUtil;
 
 public class DetectMonitMapHandler implements Runnable{
 
 	private Socket socket = null;
 	private ConcurrentHashMap<String, String> concurrentHashMap = new ConcurrentHashMap<String, String>();
-	private MonitOperator monitOperator;
-	private static final int monitStatus = 1;
+//	private MonitOperator monitOperator;
+//	private static final int monitStatus = 1;
 	
 	public DetectMonitMapHandler(Socket socket,ConcurrentHashMap<String, String> concurrentHashMap) {
 		this.socket = socket;
 		this.concurrentHashMap = concurrentHashMap;
-		monitOperator = (MonitOperator) SpringUtil.getBean(MonitOperator.class);
-		
+//		monitOperator = (MonitOperator) SpringUtil.getBean(MonitOperator.class);
+//		
 	}
 		
 	@Override
